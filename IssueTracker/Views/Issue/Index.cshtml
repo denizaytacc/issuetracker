@@ -1,0 +1,260 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
+@model IssueTracker.Models.Issue
+
+@{
+    ViewData["Title"] = "My Issues";
+}
+
+<partial name="_IssueCreateModal" />
+<partial name="_Notification" />
+<div class="row">
+    <!-- Issues start -->
+    <div class="col-xl-6 col-lg-12">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">My Issues</h6>
+                <button type="button" class="btn btn-sm btn-primary shadow-sm ml-1" data-toggle="modal" data-target="#CreateIssueModal"><i class="fa-solid fa-square-plus"></i> Create New Issue</button>
+            </div>
+            <div class="card-body">
+                @foreach(var myIssue in ViewBag.UserIssues)
+                {
+                    <div class="card">    
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>@myIssue.IssueName</h5>
+                                </div>
+                                <div class="col">
+                                    @{getStatusTemplate(@myIssue.Status);}
+
+                                </div>
+                                <div class="col">
+                                    @{getPriorityTemplate(@myIssue.Priority);}
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-sm btn-info shadow-sm" asp-controller="Issue" asp-action="Details" asp-route-id="@myIssue.Id">View</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if(ViewBag.UserIssues.Count == 0)
+                {
+                    <p>You don't have any assigned issues.</p>
+                }
+
+    
+            </div>
+
+            @{getPagination(ViewBag.CurrentUrl, "pg=", ViewBag.CurrentPage, ViewBag.MaxPage);}
+        </div>
+    </div>
+    <!-- Issues end -->
+    <!-- Teams start -->
+    <div class="col-xl-6 col-lg-12">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">My Projects</h6>
+                @{getMembersPagination(ViewBag.CurrentUrl, "pgm=", ViewBag.MembersCurrentPage, ViewBag.MembersMaxPage);}
+            </div>
+            <div class="card-body">
+                @foreach(var project in ViewBag.Members)
+                {
+                <h6><i><b>@project.ProjectName</b></i> <small>Members</small></h6>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Phone Number</th>
+                      <th scope="col">Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                @foreach(var user in project.Users)
+                {
+                    <tr>
+                      <td>@user.Name</td>
+                      <td>@user.PhoneNumber</td>
+                      <td>@user.EmailAddress</td>
+                    </tr>
+              
+                }
+
+                  </tbody>
+                </table>
+                }
+            </div>
+@*                @foreach(var project in ViewBag.Members)
+                {
+                    <div class="card-body">
+                        <h6><i><b>@project.ProjectName</b></i> <small>Members</small></h6>
+                        <table class="rwd-table">
+                          <tr>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                          </tr>
+                        @foreach(var user in project.Users)
+                        {
+                            <tr>
+                            <td data-th="Name">@user.Name</td>
+                            <td data-th="Phone Number">@user.PhoneNumber</td>
+                            <td data-th="Email">@user.EmailAddress</td>
+
+                          </tr>
+                        }
+
+
+                        </table>
+
+                                
+                    </div>
+                }*@
+                @if(ViewBag.Members.Count == 0){
+                    <br />
+                    <p class="text-center">You're not assigned to any project.</p>
+                    <br />
+                }
+        </div>
+    </div>
+    <!-- Teams end -->
+</div>
+
+
+@{
+    void getStatusTemplate(StatusType status) 
+    {
+        if (status == StatusType.Assigned)
+        {
+            <span class="btn-sm btn-outline-primary">Assigned</span>
+        }
+        else if (status == StatusType.Fixed)
+        {
+            <span class="btn-sm btn-outline-secondary">Fixed</span>
+        }
+        else if (status == StatusType.Reopened)
+        {
+            <span class="btn-sm btn-outline-success">Re-opened</span>
+        }
+        else if (status == StatusType.Closed)
+        {
+            <span class="btn-sm btn-outline-danger">Closed</span>
+        }
+    }
+    void getPriorityTemplate(PriorityType priority) 
+    {
+        if (priority == PriorityType.Immediate)
+        {
+            <span class="badge bg-danger">Immediate</span>
+        }
+        else if (priority == PriorityType.Low)
+        {
+            <span class="badge bg-success">Low</span>
+        }
+        else if (priority == PriorityType.Medium)
+        {
+            <span class="badge bg-warning text-dark">Medium</span>
+        }
+        else if (priority == PriorityType.High)
+        {
+            <span class="badge bg-primary">High</span>
+        }
+    }
+    void getPagination(List<string> currentUrl, string path, int currentPage, int maxPage) 
+    {
+        string currentPath = getOthers(currentUrl, path);
+        <div class="wrapper">
+          <nav>
+                    @if(maxPage > 0)
+                    {
+                        <ul class="pager">
+                            @if (currentPage > 1)
+                        {
+                            <li class="pager__item pager__item--prev"><a class="pager__link" href="@(currentPath)@(path)@(currentPage - 1)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">
+                            <g fill="none" fill-rule="evenodd">
+                                <path fill="#33313C" d="M7.41 1.41L6 0 0 6l6 6 1.41-1.41L2.83 6z"></path>
+                            </g>
+                            </svg></a>
+                            </li>
+                        <li class="pager__item"><a class="pager__link" href="@(currentPath)@(path)@(currentPage - 1)">@(currentPage - 1)</a></li>
+                        }
+                    
+                        <li class="pager__item active"><a class="pager__link" href="@(currentPath)@(path)@(currentPage)">@(currentPage)</a></li>
+                        @if((currentPage) != maxPage)
+                        {
+                            <li class="pager__item"><a class="pager__link" href="@(currentPath)@(path)@(currentPage + 1)">@(currentPage+1)</a></li>
+                        }
+
+                        @if(currentPage == 1 && ((currentPage != maxPage) && ((currentPage + 1) != maxPage)))
+                        {
+                            <li class="pager__item"><a class="pager__link" href="@(currentPath)@(path)@(currentPage + 2)">@(currentPage+2)</a></li>
+
+                        }
+                        @if (currentPage != maxPage)
+                        {
+                            <li class="pager__item pager__item--next"><a class="pager__link" href="@(currentPath)@(path)@(currentPage + 1)">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">
+                                <g fill="none" fill-rule="evenodd">
+                                  <path fill="#33313C" d="M7.41 1.41L6 0 0 6l6 6 1.41-1.41L2.83 6z"></path>
+                                </g>
+                              </svg></a></li>
+                        }
+                        </ul>
+
+                    }
+                    
+
+          </nav>
+        </div>
+    }
+    void getMembersPagination(List<string> currentUrl, string path, int currentPage, int maxPage)
+    {
+        string currentPath = getOthers(currentUrl, path);
+            @if(maxPage > 0){
+            <ul class="pagination">
+                @if (currentPage > 1){
+                   <li class="page-item">
+                      <a class="page-link" href="@(currentPath)@(path)@(currentPage-1)" aria-label="Previous">
+                        <span aria-hidden="true"><i class="fa-solid fa-arrow-left"></i></span>
+                      </a>
+                   </li>
+            }
+            @if (currentPage != maxPage){
+            <li>
+              <a class="page-link" href="@(currentPath)@(path)@(currentPage+1)" aria-label="Next">
+                <span aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+              </a>
+            </li>
+            }
+            </ul>
+    
+            }
+    }
+
+    string getOthers (List<string> currentUrl, string path)
+    {
+        string returnUrl = "?";
+        foreach(string url in currentUrl)
+        {
+            if (!url.Contains(path))
+            {
+                returnUrl += url + "&";
+            }
+        }
+        return returnUrl;
+
+    }
+}
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -1,0 +1,51 @@
+﻿@model IssueTracker.Models.Project
+
+<div class="modal" id="CreateProjectModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create new project</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" asp-controller="Project" asp-action="Create" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProjectName" class="control-label"></label>
+                <input asp-for="ProjectName" class="form-control" />
+                <span asp-validation-for="ProjectName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectDescription" class="control-label"></label>
+                <input asp-for="ProjectDescription" class="form-control" />
+                <span asp-validation-for="ProjectDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Progress" class="control-label"></label>
+                <input asp-for="Progress" class="form-control" />
+                <span asp-validation-for="Progress" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Users" class="control-label"></label>
+                <br />
+                <select class="selectpicker" asp-for="Users" name="ProjectUsers" id="ProjectUsers" asp-items="@ViewBag.Users" multiple data-width="100%">
+                </select>   
+                <span asp-validation-for="Users" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary float-right" />
+            </div>
+        </form>
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('select').selectpicker();
+</script>

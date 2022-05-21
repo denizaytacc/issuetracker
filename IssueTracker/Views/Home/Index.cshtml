@@ -1,0 +1,228 @@
+﻿
+@{
+    ViewData["Title"] = "DashBoard";
+}
+
+<div id="CreatePlaceHolder"></div>
+<partial name="~/Views/Shared/_IssueCreateModal.cshtml" model="new IssueTracker.Models.Issue()"/>
+<partial name="~/Views/Shared/_ProjectCreateModal.cshtml" model="new IssueTracker.Models.Project()"/>
+<partial name="_Notification" />
+
+<div class="container">
+
+    <div class="col-12">
+        <div class="card shadow mb-4">
+
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                @if (User.IsInRole("Admin"))
+                { <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#CreateProjectModal"><i class="fa-solid fa-folder-plus"></i> Create new project</button> }
+                 
+            </div>
+            <div class="card-body">
+                @foreach(var project in ViewBag.Projects){
+                    <a class="btn btn-sm btn-primary shadow-sm ml-1 mb-1 float-right" asp-controller="Project" asp-action="Details" asp-route-id="@project.Id">Details</a>
+                    
+                    <div><h6>@project.ProjectName - @project.ProjectDescription</h6>
+                    <br>
+                    Team Members: @if(project.Users.Count == 0){<button type="button" class="btn btn-light">None</button>}
+                    @foreach(var usr in project.Users){<button type="button" class="btn btn-light">@usr.Name</button>}
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: @project.Progress%;" aria-valuenow="@project.Progress" aria-valuemin="0" aria-valuemax="100">@project.Progress%</div>
+                    </div>
+                    
+                    </div>
+                    <hr />
+                }
+                @if(ViewBag.Projects.Count == 0)
+                {
+                    <div class="text-center">There are no projects yet..</div>
+                }
+                @{getPagination(ViewBag.CurrentUrl, "pgp=", ViewBag.ProjectCurrentPage, ViewBag.ProjectMaxPage);}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Issues start -->           
+<div class="row justify-content-center mb-2">
+    <div class="col-3">
+        <button type="button" class="btn btn-sm btn-info shadow-sm" data-toggle="modal" data-target="#CreateIssueModal"><bold><i class="fa-solid fa-square-plus"></i> Create New Issue</bold></button>
+        
+    </div>
+</div>
+<div class="row">
+                    
+    <!-- Open Issues start -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Open Issues</h6>
+                @{getPagination(ViewBag.CurrentUrl, "pgo=", ViewBag.OpenIssueCurrentPage, ViewBag.OpenIssueMaxPage);}
+            </div>
+            <div class="card-body">
+                @foreach(var openIssue in ViewBag.OpenIssues)
+                {
+                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <h6><b>@openIssue.IssueName</b>
+                            </h6>
+                        </div>
+                        <div class="col-3">
+                            <p>ETC: <i>@openIssue.EstimatedTimeToComplete h</i></p>
+                        </div>
+                        <div class="col-3">
+                            <a class="btn btn-sm btn-primary shadow-sm" asp-controller="Issue" asp-action="Claim" asp-route-id="@openIssue.Id">Claim</a> 
+                        </div>
+                    </div>
+                </div>
+                }
+                @if(ViewBag.OpenIssues.Count == 0)
+                {
+                    <p>None..</p>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Open Issues end -->
+    <!-- Fixed Issues start -->
+        <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Fixed Issues</h6>
+                @{getPagination(ViewBag.CurrentUrl, "pgf=", ViewBag.FixedIssueCurrentPage, ViewBag.FixedIssueMaxPage);}
+            </div>
+            <div class="card-body">
+                @foreach(var fixedIssue in ViewBag.FixedIssues)
+                {
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-9">
+                                <h6><b>@fixedIssue.IssueName</b>
+                                </h6>
+                            </div>
+                            <div class="col-3">
+                                <a class="btn btn-info shadow-sm" asp-controller="Issue" asp-action="Details" asp-route-id="@fixedIssue.Id">View</a> 
+
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if(ViewBag.FixedIssues.Count == 0)
+                {
+                    <p>None..</p>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Fixed Issues end -->
+    <!-- Closed Issues start -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Closed Issues</h6>
+                @{getPagination(ViewBag.CurrentUrl, "pgc=", ViewBag.ClosedIssueCurrentPage, ViewBag.ClosedIssueMaxPage);}
+            </div>
+            <div class="card-body">
+                @foreach(var closedIssue in ViewBag.ClosedIssues)
+                {
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-9">
+                                    <h6><b>@closedIssue.IssueName</b>
+                                    </h6>
+                                </div>
+                                <div class="col-3">
+                                    <a class="btn btn-info shadow-sm" asp-controller="Issue" asp-action="Details" asp-route-id="@closedIssue.Id">View</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if(ViewBag.ClosedIssues.Count == 0)
+                {
+                    <p>None..</p>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- Closed Issues end -->
+</div>
+<!-- Issues end -->
+
+
+@{
+    void getPagination(List<string> currentUrl, string path, int currentPage, int maxPage) 
+    {
+        string currentPath = getOthers(currentUrl, path);
+        <div class="wrapper">
+          <nav>
+            <ul class="pager">
+                    @if (maxPage > 0)
+                    {
+                         @if (currentPage > 1)
+                    {
+                        <li class="pager__item pager__item--prev"><a class="pager__link" href="@(currentPath)@(path)@(currentPage - 1)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">
+                        <g fill="none" fill-rule="evenodd">
+                            <path fill="#33313C" d="M7.41 1.41L6 0 0 6l6 6 1.41-1.41L2.83 6z"></path>
+                        </g>
+                        </svg></a>
+                        </li>
+                        <li class="pager__item"><a class="pager__link" href="@(currentPath)@(path)@(currentPage - 1)">@(currentPage - 1)</a></li>
+                        }
+                    
+                        <li class="pager__item active"><a class="pager__link" href="@(currentPath)@(path)@(currentPage)">@(currentPage)</a></li>
+                        @if((currentPage) != maxPage)
+                        {
+                            <li class="pager__item"><a class="pager__link" href="@(currentPath)@(path)@(currentPage + 1)">@(currentPage+1)</a></li>
+                        }
+
+                        @if(currentPage == 1 && ((currentPage != maxPage) && ((currentPage + 1) != maxPage)))
+                        {
+                            <li class="pager__item"><a class="pager__link" href="@(currentPath)@(path)@(currentPage + 2)">@(currentPage+2)</a></li>
+
+                        }
+                        @if (currentPage != maxPage)
+                        {
+                            <li class="pager__item pager__item--next"><a class="pager__link" href="@(currentPath)@(path)@(currentPage + 1)">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">
+                                <g fill="none" fill-rule="evenodd">
+                                  <path fill="#33313C" d="M7.41 1.41L6 0 0 6l6 6 1.41-1.41L2.83 6z"></path>
+                                </g>
+                              </svg></a></li>
+                        }
+                    }
+                   
+
+            </ul>
+          </nav>
+        </div>
+
+
+    }
+    string getOthers (List<string> currentUrl, string path)
+    {
+        string returnUrl = "?";
+        foreach(string url in currentUrl)
+        {
+            if (!url.Contains(path))
+            {
+                returnUrl += url + "&";
+            }
+        }
+        return returnUrl;
+
+    }
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

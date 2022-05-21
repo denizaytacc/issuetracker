@@ -1,0 +1,78 @@
+﻿@model IssueTracker.Models.Issue
+
+<div class="modal" id="CreateIssueModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create new Issue</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" asp-controller="Issue" asp-action="Create" autocomplete="off">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IssueName" class="control-label"></label>
+                <input asp-for="IssueName" class="form-control" />
+                <span asp-validation-for="IssueName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstimatedTimeToComplete" class="control-label"></label>
+                <input asp-for="EstimatedTimeToComplete" class="form-control" />
+                <span asp-validation-for="EstimatedTimeToComplete" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Priority" class="control-label"></label>
+                <select asp-for="Priority" 
+                    class="form-control" 
+                    asp-items="Html.GetEnumSelectList<PriorityType>()">
+                <option selected disabled hidden>Select Priority</option>
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" 
+                    class="form-control" 
+                    asp-items="Html.GetEnumSelectList<StatusType>()">
+                <option selected disabled hidden>Select Status</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProjectId" class="control-label"></label>
+                <select asp-for="ProjectId" class ="form-control" asp-items="ViewBag.ProjectId"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Users" class="control-label"></label>
+                <br />
+                <select class="selectpicker" asp-for="Users" name="IssueUsers" id="IssueUsers" asp-items="@ViewBag.Users" multiple data-width="100%">
+                </select>   
+
+                <span asp-validation-for="Users" class="text-danger"></span>
+            </div>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary float-right" />
+            </div>
+        </form>
+        <button type="button" class="btn btn-secondary float-left" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    $('select').selectpicker();
+</script>

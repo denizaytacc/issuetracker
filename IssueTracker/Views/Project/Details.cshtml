@@ -1,0 +1,186 @@
+﻿@model IssueTracker.Models.Project
+
+@{
+    ViewData["Title"] = Model.ProjectName;
+}
+
+@*@Html.Partial("~/Views/Shared/_IssueCreateModal.cshtml", new IssueTracker.Models.Issue())*@
+<partial name="~/Views/Shared/_IssueCreateModal.cshtml" model="new IssueTracker.Models.Issue()"/>
+
+<partial name="_Notification" />
+<div class="row">
+    <div class="col-xl-6 col-lg-7">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">@Model.ProjectName</h6>
+
+            </div>
+            <div class="card-body">
+                 <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="ProjectName" class="control-label"></label>
+                        <input asp-for="ProjectName" class="form-control" />
+                        <span asp-validation-for="ProjectName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ProjectDescription" class="control-label"></label>
+                        <input asp-for="ProjectDescription" class="form-control" />
+                        <span asp-validation-for="ProjectDescription" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Progress" class="control-label"></label>
+                        <input asp-for="Progress" class="form-control" />
+                        <span asp-validation-for="Progress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Users" class="control-label"></label>
+                                        <br />
+                        <select class="selectpicker" asp-for="Users" name="ProjectUsers" id="ProjectUsers" asp-items="@ViewBag.UnSelectedUsers" multiple data-width="100%">
+                        
+                        @foreach(var selected in ViewBag.SelectedUsers)
+                        {
+                            <option value="@selected.Id" selected>@selected.Name</option>
+                        }
+                        </select>   
+
+
+                        <span asp-validation-for="Users" class="text-danger"></span>
+                    </div>
+                    @if (User.IsInRole("Admin")){
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-sm btn-primary float-right" />
+                        </div>
+                        <a class="btn btn-sm btn-danger float-left" data-toggle="modal" data-target="#deleteProjectModal">Delete Project</a>
+                    }
+                    
+                </form>      
+                  
+            </div>
+        </div>
+    </div>
+<div class="col-xl-6 col-lg-5">
+    <div class="card shadow mb-4">
+        <div
+            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">@Model.ProjectName 's Issues</h6>
+            <button type="button" class="btn btn-sm btn-primary shadow-sm ml-1" data-toggle="modal" data-target="#CreateIssueModal"><i class="fa-solid fa-square-plus"></i> Create New Issue</button>
+            </div>
+        <div class="card-body">
+            @foreach(var myIssue in ViewBag.ProjectIssues)
+                {
+                    <div class="card">    
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>@myIssue.IssueName</h5>
+                                </div>
+                                <div class="col">
+                                    <span class="btn-sm btn-outline-secondary">@myIssue.Status</span>
+
+                                </div>
+                                <div class="col">
+                                    <span class="badge bg-danger">@myIssue.Priority</span>
+                                </div>
+                                <div class="col">
+                                    <a class="btn btn-info shadow-sm" asp-controller="Issue" asp-action="Details" asp-route-id="@myIssue.Id">View</a> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }  
+            @{getPagination("?pg=", ViewBag.CurrentPage, ViewBag.MaxPage);}
+        </div>
+                            
+    </div>
+                           
+    </div>
+</div>
+
+
+<div class="modal fade" id="deleteProjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Warning: All issues belonging to this project will also be deleted! Are you still sure you want to delete this project?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <form method="post">
+                    <button class="btn btn-danger" asp-controller="Project" asp-action="Delete" asp-route-id="@Model.Id"><i class="fa-solid fa-trash"></i> Delete</button>
+                </form>
+                
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    void getPagination(string path, int currentPage, int maxPage) 
+    {
+        <div class="wrapper">
+          <nav>
+            <ul class="pager">
+                    @if(maxPage > 0)
+                    {
+                        @if (currentPage > 1)
+                        {
+                            <li class="pager__item pager__item--prev"><a class="pager__link" href="@(path)@(currentPage - 1)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">
+                            <g fill="none" fill-rule="evenodd">
+                                <path fill="#33313C" d="M7.41 1.41L6 0 0 6l6 6 1.41-1.41L2.83 6z"></path>
+                            </g>
+                            </svg></a>
+                            </li>
+                        <li class="pager__item"><a class="pager__link" href="@(path)@(currentPage - 1)">@(currentPage - 1)</a></li>
+                        }
+                    
+                        <li class="pager__item active"><a class="pager__link" href="@(path)@(currentPage)">@(currentPage)</a></li>
+                        @if((currentPage) != maxPage)
+                        {
+                            <li class="pager__item"><a class="pager__link" href="@(path)@(currentPage + 1)">@(currentPage+1)</a></li>
+                        }
+
+                        @if(currentPage == 1 && ((currentPage != maxPage) && ((currentPage + 1) != maxPage)))
+                        {
+                            <li class="pager__item"><a class="pager__link" href="@(path)@(currentPage + 2)">@(currentPage+2)</a></li>
+
+                        }
+                        @if (currentPage != maxPage)
+                        {
+                            <li class="pager__item pager__item--next"><a class="pager__link" href="@(path)@(currentPage + 1)">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewbox="0 0 8 12">
+                                <g fill="none" fill-rule="evenodd">
+                                  <path fill="#33313C" d="M7.41 1.41L6 0 0 6l6 6 1.41-1.41L2.83 6z"></path>
+                                </g>
+                              </svg></a></li>
+                        }
+                    }
+                    
+
+            </ul>
+          </nav>
+        </div>
+
+
+    }
+}
+    
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+    $('select').selectpicker();
+</script>

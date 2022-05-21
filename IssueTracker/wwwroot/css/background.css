@@ -1,0 +1,13 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Exo:400,700');
+
+
+
+body {
+    font-family: 'Exo', sans-serif;
+    background-image: url(low-poly-grid-haikei.svg);
+}
+
+.mySVG {
+    background-image: url(low-poly-grid-haikei.svg);
+    background-size: cover;
+}

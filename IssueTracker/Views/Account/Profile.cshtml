@@ -1,0 +1,43 @@
+﻿@model IssueTracker.Models.User
+@{
+    ViewData["Title"] = "User Profile";
+}
+<partial name="_Notification" />
+<div class="row justify-content-center">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">My Profile</h6>
+
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-3">
+                         <img style="width:150px;height:150px;" src="@Url.Content("~/Image/" + Model.ProfileImage)"
+                         alt="" class="img-rounded img-responsive" asp-append-version="true" />
+                        
+                    </div>
+                        <div class="col-3">
+                            <h6><b>Name</b></h6>
+                            <hr />
+                            <h6>@Model.Name</h6>
+                        </div>
+                        <div class="col-3">
+                            <h6><b>Phone Number</b></h6>
+                            <hr />
+                            <h6>@Model.PhoneNumber</h6>
+                        </div>
+                        <div class="col-3">
+                            <h6><b>Email Address</b></h6>
+                            <hr />
+                            <h6>@Model.EmailAddress</h6>
+                        </div>
+
+                </div>
+                <a class="btn btn-sm btn-primary shadow-sm ml-1 float-right" asp-controller="Account" asp-action="Edit"  asp-route-id="@Model.Id" ><i class="fa-solid fa-pen"></i> Edit profile</a> 
+            </div>
+                            
+        </div>
+    </div>
+</div>

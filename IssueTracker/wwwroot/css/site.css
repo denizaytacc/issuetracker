@@ -1,0 +1,148 @@
+
+
+
+/*Comment CSS Start*/
+.dots {
+    height: 4px;
+    width: 4px;
+    margin-bottom: 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.badge {
+    padding: 7px;
+    padding-right: 9px;
+    padding-left: 16px;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+}
+
+.user-img {
+    margin-top: 4px;
+}
+
+.check-icon {
+    font-size: 17px;
+    color: #c3bfbf;
+    top: 1px;
+    position: relative;
+    margin-left: 3px;
+}
+
+.form-check-input {
+    margin-top: 6px;
+    margin-left: -24px !important;
+    cursor: pointer;
+}
+
+
+.form-check-input:focus {
+    box-shadow: none;
+}
+
+
+.icons i {
+    margin-left: 8px;
+}
+
+.reply {
+    margin-left: 12px;
+}
+
+.reply small {
+    color: #b7b4b4;
+}
+
+
+.reply small:hover {
+    color: green;
+    cursor: pointer;
+}
+/*Comment CSS End*/
+
+/*Pagination Start*/
+
+
+.pager {
+    margin: 0 0 3.75rem;
+    font-size: 0;
+    text-align: center;
+}
+
+.pager__item {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin: 0 2px;
+}
+
+.pager__item.active .pager__link {
+    background-color: #0083ff;
+    border-color: #0083ff;
+    color: #fff;
+    text-decoration: none;
+}
+
+.pager__item--prev svg, .pager__item--next svg {
+    width: 8px;
+    height: 12px;
+}
+
+.pager__item--next .pager__link svg {
+    transform: rotate(180deg);
+    transform-origin: center center;
+}
+
+.pager__link {
+    position: relative;
+    border-radius: 4px;
+    display: block;
+    text-align: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    line-height: 2rem;
+    margin-left: -1px;
+    color: #2f3640;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.pager__link:hover, .pager__link:focus, .pager__link:active {
+    background-color: #0083ff;
+    border-color: #0083ff;
+    color: #fff;
+    text-decoration: none;
+}
+
+.pager__link:hover svg path, .pager__link:focus svg path, .pager__link:active svg path {
+    fill: #fff;
+}
+
+.pager .pager__item.active + .pager__item .pager__link, .pager .pager__item:hover + .pager__item .pager__link {
+    border-left-color: #0083ff;
+}
+
+@media screen and (max-width: 576px) {
+.pager__item {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+.pager__item.active, .pager__item:first-of-type, .pager__item:last-of-type, .pager__item:nth-of-type(2), .pager__item:nth-last-of-type(2) {
+    position: initial;
+    top: initial;
+    left: initial;
+}
+
+.pager__item.active + li {
+    position: initial;
+    top: initial;
+    left: initial;
+}
+}
+
+/*Pagination end*/
+
