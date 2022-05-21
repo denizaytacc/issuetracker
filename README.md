@@ -1,6 +1,6 @@
 # Bugzoid, an issuetracker
-[DEMO](bugzoid.azurewebsites.net) (Login/Register Needed)
-Bugzoid is a web application for tracking issues. My concept was mostly inspired by Zoho. It was built ASP .NET Core 6.0 using MVC architecture, for front-end I mostly used Bootstrap ([here](getbootstrap.com)) for authorization/authentication Auth0([here](auth0.com)) was utilized.
+[DEMO](https://www.bugzoid.azurewebsites.net) (Login/Register Needed)
+Bugzoid is a web application for tracking issues. My concept was mostly inspired by Zoho. It was built ASP .NET Core 6.0 using MVC architecture, for front-end I mostly used Bootstrap ([here](https://www.getbootstrap.com)) for authorization/authentication Auth0([here](https://www.auth0.com)) was utilized.
 
 ## Prerequirements
 
