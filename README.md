@@ -18,4 +18,17 @@ Bugzoid is a web application for tracking issues. My concept was mostly inspired
 * Microsoft.VisualStudio.Web.CodeGeneration.Design 
 * Swashbuckle.AspNetCore 
 * toastr
-* X.PagedList.Mvc.Core 
+
+## Screenshots
+Main page
+![main page](https://i.imgur.com/YjvfYLK.png)
+Issue Index page
+![main page](https://i.imgur.com/a82chxU.png)
+Issue Details page
+![main page](https://i.imgur.com/IZ6eMHu.png)
+Profile page
+![main page](https://i.imgur.com/2TPiSfZ.png)
+Create Issue Modal
+![main page](https://i.imgur.com/oAeAGmn.png)
+Create Project Modal
+![main page](https://i.imgur.com/J56JoNW.png)
